@@ -6,9 +6,8 @@ import { Mdx } from "@/components/mdx-components"
 import "@/styles/mdx.css"
 import { Metadata } from "next"
 
-import { env } from "@/env.mjs"
 import { siteConfig } from "@/config/site"
-import { absoluteUrl } from "@/lib/utils"
+import { absoluteUrl } from "@/lib/absolute-url"
 
 interface PageProps {
   params: {
@@ -36,7 +35,7 @@ export async function generateMetadata({
     return {}
   }
 
-  const url = env.NEXT_PUBLIC_APP_URL
+  const url = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
 
   const ogUrl = new URL(`${url}/api/og`)
   ogUrl.searchParams.set("heading", page.title)

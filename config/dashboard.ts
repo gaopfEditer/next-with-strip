@@ -11,6 +11,10 @@ export const dashboardConfig: DashboardConfig = {
       href: "/support",
       disabled: true,
     },
+    {
+      title: "Legacy",
+      href: "/legacy",
+    },
   ],
   sidebarNav: [
     {

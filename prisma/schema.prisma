@@ -46,6 +46,9 @@ model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
+  passwordHash  String?   @map(name: "password_hash")
+  isEnabled     Boolean   @default(true) @map(name: "is_enabled")
+  lastLoginAt   DateTime? @map(name: "last_login_at")
   emailVerified DateTime?
   image         String?
   createdAt     DateTime  @default(now()) @map(name: "created_at")

@@ -5,7 +5,7 @@ import { proPlan } from "@/config/subscriptions"
 import { authOptions } from "@/lib/auth"
 import { stripe } from "@/lib/stripe"
 import { getUserSubscriptionPlan } from "@/lib/subscription"
-import { absoluteUrl } from "@/lib/utils"
+import { absoluteUrl } from "@/lib/absolute-url"
 
 const billingUrl = absoluteUrl("/dashboard/billing")
 

@@ -10,7 +10,14 @@ const nextConfig = {
   },
   experimental: {
     appDir: true,
-    serverComponentsExternalPackages: ["@prisma/client"],
+    instrumentationHook: true,
+    serverComponentsExternalPackages: ["@prisma/client", "mysql2"],
+  },
+  webpack: (config) => {
+    config.infrastructureLogging = {
+      level: "error",
+    }
+    return config
   },
 }
 

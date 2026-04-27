@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 
-import { authOptions } from "@/lib/auth"
+import { AUTH_SIGN_IN_PATH } from "@/lib/auth-constants"
 import { db } from "@/lib/db"
 import { getCurrentUser } from "@/lib/session"
 import { EmptyPlaceholder } from "@/components/empty-placeholder"
@@ -17,7 +17,7 @@ export default async function DashboardPage() {
   const user = await getCurrentUser()
 
   if (!user) {
-    redirect(authOptions?.pages?.signIn || "/login")
+    redirect(AUTH_SIGN_IN_PATH)
   }
 
   const posts = await db.post.findMany({

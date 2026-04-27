@@ -8,8 +8,8 @@ import { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 
-import { env } from "@/env.mjs"
-import { absoluteUrl, cn, formatDate } from "@/lib/utils"
+import { absoluteUrl } from "@/lib/absolute-url"
+import { cn, formatDate } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 
@@ -39,7 +39,7 @@ export async function generateMetadata({
     return {}
   }
 
-  const url = env.NEXT_PUBLIC_APP_URL
+  const url = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
 
   const ogUrl = new URL(`${url}/api/og`)
   ogUrl.searchParams.set("heading", post.title)

@@ -5,6 +5,7 @@ import GitHubProvider from "next-auth/providers/github"
 import { Client } from "postmark"
 
 import { env } from "@/env.mjs"
+import { AUTH_SIGN_IN_PATH } from "@/lib/auth-constants"
 import { siteConfig } from "@/config/site"
 import { db } from "@/lib/db"
 
@@ -19,7 +20,7 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   pages: {
-    signIn: "/login",
+    signIn: AUTH_SIGN_IN_PATH,
   },
   providers: [
     GitHubProvider({
