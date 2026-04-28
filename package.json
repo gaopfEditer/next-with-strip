@@ -7,17 +7,19 @@
     "url": "https://twitter.com/shadcn"
   },
   "scripts": {
-    "dev": "concurrently \"pnpm legacy:center\" \"contentlayer dev\" \"next dev\"",
+    "dev": "concurrently \"pnpm legacy:center\" \"contentlayer dev\" \"next dev -p 3000\"",
     "legacy:center": "dotenv -e .env -- node ./scripts/legacy-message-center.cjs",
-    "dev:legacy": "concurrently \"pnpm legacy:center\" \"contentlayer dev\" \"next dev\"",
+    "dev:legacy": "concurrently \"pnpm legacy:center\" \"contentlayer dev\" \"next dev -p 3000\"",
     "test:tv": "node ./scripts/test-tradingview-api.js",
-    "dev:proxy": "dotenv -e .env -- cross-env NODE_OPTIONS=\"--require=global-agent/bootstrap --require=./scripts/openid-http-timeout.cjs\" concurrently \"pnpm legacy:center\" \"contentlayer dev\" \"next dev\"",
+    "dev:proxy": "dotenv -e .env -- cross-env NODE_OPTIONS=\"--require=global-agent/bootstrap --require=./scripts/openid-http-timeout.cjs\" concurrently \"pnpm legacy:center\" \"contentlayer dev\" \"next dev -p 3000\"",
     "build": "contentlayer build && next build",
     "turbo": "next dev --turbo",
     "start": "next start",
     "lint": "next lint",
     "preview": "next build && next start",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev"
   },
   "dependencies": {
     "@editorjs/code": "^2.8.0",

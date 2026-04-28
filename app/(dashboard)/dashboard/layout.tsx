@@ -1,5 +1,6 @@
-import { notFound } from "next/navigation"
+import { redirect } from "next/navigation"
 
+import { AUTH_SIGN_IN_PATH } from "@/lib/auth-constants"
 import { dashboardConfig } from "@/config/dashboard"
 import { getCurrentUser } from "@/lib/session"
 import { MainNav } from "@/components/main-nav"
@@ -17,7 +18,7 @@ export default async function DashboardLayout({
   const user = await getCurrentUser()
 
   if (!user) {
-    return notFound()
+    redirect(AUTH_SIGN_IN_PATH)
   }
 
   return (

@@ -7,12 +7,9 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 
 type LegacyUser = {
-  id: string
-  email: string
-  is_enabled: boolean
-  last_login_at: string | null
-  created_at: string
-  updated_at: string
+  id: string | null
+  email: string | null
+  name: string | null
 }
 
 export default function LegacyDashboardPage() {
@@ -23,14 +20,18 @@ export default function LegacyDashboardPage() {
   useEffect(() => {
     ;(async () => {
       try {
-        const res = await fetch("/api/legacy/auth/me")
+        const res = await fetch("/api/auth/session")
         const json = await res.json()
-        if (!res.ok || !json.success) {
+        if (!res.ok || !json?.user) {
           throw new Error("unauthorized")
         }
-        setUser(json.user)
+        setUser({
+          id: json.user.id ?? null,
+          email: json.user.email ?? null,
+          name: json.user.name ?? null,
+        })
       } catch {
-        router.push("/legacy/login")
+        router.push("/login?from=%2Flegacy%2Fdashboard")
       } finally {
         setLoading(false)
       }
@@ -38,9 +39,7 @@ export default function LegacyDashboardPage() {
   }, [router])
 
   async function logout() {
-    await fetch("/api/legacy/auth/logout", { method: "POST" })
-    router.push("/legacy/login")
-    router.refresh()
+    window.location.href = "/api/auth/signout?callbackUrl=/login"
   }
 
   if (loading) {
@@ -59,11 +58,10 @@ export default function LegacyDashboardPage() {
       </div>
 
       <div className="rounded-lg border p-6">
-        <p><strong>用户 ID:</strong> {user.id}</p>
-        <p><strong>邮箱:</strong> {user.email}</p>
-        <p><strong>状态:</strong> {user.is_enabled ? "已启用" : "已禁用"}</p>
-        <p><strong>最后登录:</strong> {user.last_login_at ?? "-"}</p>
-        <p><strong>注册时间:</strong> {user.created_at}</p>
+        <p><strong>用户 ID:</strong> {user.id ?? "-"}</p>
+        <p><strong>姓名:</strong> {user.name ?? "-"}</p>
+        <p><strong>邮箱:</strong> {user.email ?? "-"}</p>
+        <p><strong>登录体系:</strong> NextAuth 主站 Token</p>
       </div>
 
       <div className="mt-6 flex gap-3">
