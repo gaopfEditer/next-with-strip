@@ -19,7 +19,9 @@
     "preview": "next build && next start",
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev"
+    "db:migrate": "prisma migrate dev",
+    "docker:build": "docker build -t taxonomy:latest .",
+    "docker:up": "docker compose up -d --build"
   },
   "dependencies": {
     "@editorjs/code": "^2.8.0",

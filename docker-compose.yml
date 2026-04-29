@@ -1,0 +1,49 @@
+# 一键：`docker compose up -d --build`
+# 1. 复制 `.env.example` 为 `.env`，按生产填写（至少 DATABASE_URL、NEXTAUTH_*、NEXT_PUBLIC_APP_URL 等）。
+# 2. 首次建表：`docker compose run --rm -e RUN_MIGRATIONS=1 web` 或在下方给 web 加 `RUN_MIGRATIONS=1` 仅第一次启动。
+#
+# 若已有外部 MySQL，可删掉 `db` 服务，并把 `DATABASE_URL` 指向外部地址。
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://op.e.ezcoin.ink}
+        NEXTAUTH_URL: ${NEXTAUTH_URL:-https://op.e.ezcoin.ink}
+        NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-docker-build-placeholder-secret-min-32-chars}
+        GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-docker_build_placeholder}
+        GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-docker_build_placeholder}
+        GITHUB_ACCESS_TOKEN: ${GITHUB_ACCESS_TOKEN:-docker_build_placeholder}
+        DATABASE_URL: ${DATABASE_URL:-mysql://root:44821109cf354ae0@127.0.0.1:3306/taxonomy}
+        SMTP_FROM: ${SMTP_FROM:-dev@localhost}
+        POSTMARK_API_TOKEN: ${POSTMARK_API_TOKEN:-dev-placeholder}
+        POSTMARK_SIGN_IN_TEMPLATE: ${POSTMARK_SIGN_IN_TEMPLATE:-dev-placeholder}
+        POSTMARK_ACTIVATION_TEMPLATE: ${POSTMARK_ACTIVATION_TEMPLATE:-dev-placeholder}
+        STRIPE_API_KEY: ${STRIPE_API_KEY:-sk_test_placeholder}
+        STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-whsec_placeholder}
+        STRIPE_PRO_MONTHLY_PLAN_ID: ${STRIPE_PRO_MONTHLY_PLAN_ID:-price_placeholder}
+    restart: unless-stopped
+    ports:
+      - "${WEB_PUBLISH_PORT:-3000}:3000"
+    # 项目根目录 `.env` 会被 Compose 读取用于下方 ${VAR} 替换（不必写 env_file）
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-mysql://root:44821109cf354ae0@127.0.0.1:3306/taxonomy}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-https://op.e.ezcoin.ink}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-docker-build-placeholder-secret-min-32-chars}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://op.e.ezcoin.ink}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-docker_build_placeholder}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-docker_build_placeholder}
+      GITHUB_ACCESS_TOKEN: ${GITHUB_ACCESS_TOKEN:-docker_build_placeholder}
+      SMTP_FROM: ${SMTP_FROM:-dev@localhost}
+      POSTMARK_API_TOKEN: ${POSTMARK_API_TOKEN:-dev-placeholder}
+      POSTMARK_SIGN_IN_TEMPLATE: ${POSTMARK_SIGN_IN_TEMPLATE:-dev-placeholder}
+      POSTMARK_ACTIVATION_TEMPLATE: ${POSTMARK_ACTIVATION_TEMPLATE:-dev-placeholder}
+      STRIPE_API_KEY: ${STRIPE_API_KEY:-sk_test_placeholder}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-whsec_placeholder}
+      STRIPE_PRO_MONTHLY_PLAN_ID: ${STRIPE_PRO_MONTHLY_PLAN_ID:-price_placeholder}
+      JWT_SECRET: ${JWT_SECRET:-optional-docker-placeholder}
+      LEGACY_JWT_SECRET: ${LEGACY_JWT_SECRET:-optional-docker-placeholder}
+      # 首次部署可改为 1，执行完 migrate 后改回 0 避免每次启动都跑
+      RUN_MIGRATIONS: ${RUN_MIGRATIONS:-0}

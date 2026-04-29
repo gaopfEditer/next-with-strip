@@ -1,0 +1,26 @@
+# 依赖与构建产物（镜像内重新安装/构建）
+node_modules
+.pnpm-store
+.next
+.contentlayer
+.turbo
+out
+dist
+
+# 本地与密钥（运行时通过 compose / -e 注入）
+.env
+.env.*
+!.env.example
+
+# Git / IDE
+.git
+.gitignore
+.cursor
+*.log
+
+# 测试与杂项
+coverage
+.husky
+terminals
+**/*.md
+!README.md
