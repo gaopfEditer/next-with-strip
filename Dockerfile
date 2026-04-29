@@ -60,7 +60,7 @@ FROM node:20-bookworm-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV PORT=3000
+ENV PORT=3011
 ENV HOSTNAME=0.0.0.0
 
 RUN apt-get update \
@@ -73,14 +73,21 @@ RUN addgroup --system --gid 1001 nodejs \
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/.next /opt/built-next
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/scripts ./scripts
 
 # migrate deploy 需要 CLI（体积小）
 RUN npm install -g prisma@4.13.0
 
 COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh && chown -R nextjs:nodejs /app
+
+# 1. 使用 sed 强制剔除回车符 (^M)
+# 2. 赋予 755 执行权限
+RUN sed -i 's/\r$//' /entrypoint.sh && \
+    chmod 755 /entrypoint.sh && \
+    chown -R nextjs:nodejs /app
 
 USER nextjs
-EXPOSE 3000
+EXPOSE 3011
 ENTRYPOINT ["/entrypoint.sh"]

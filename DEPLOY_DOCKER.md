@@ -88,6 +88,9 @@ docker compose up -d --build
 docker compose up -d --build web
 ```
 
+构建之后拷贝前端 docker cp next-with-strip-web-1:/app/.next/. ./app/.next/ 
+数据库连接要使用 docker的网关172.17.0.1,因此url改为 DATABASE_URL="mysql://root:password@172.17.0.1:3306/dbname"
+
 ## 6. 域名与 HTTPS（推荐）
 
 建议在服务器前面加 Nginx / Caddy 反向代理：
