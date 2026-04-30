@@ -19,7 +19,12 @@ const nextConfig = {
   experimental: {
     appDir: true,
     instrumentationHook: true,
-    serverComponentsExternalPackages: ["@prisma/client", "mysql2"],
+    serverComponentsExternalPackages: [
+      "@prisma/client",
+      "@prisma/client/runtime/library",
+      "mysql2",
+      "prisma",
+    ],
     /** Docker standalone：把 Contentlayer 产物、字体与 Prisma/mysql2 打进 trace */
     outputFileTracingIncludes: {
       "/*": [

@@ -1,10 +1,25 @@
+import "server-only"
+
 import { spawnSync } from "child_process"
 
 import { PrismaClient } from "@prisma/client"
-import {
-  PrismaClientInitializationError,
-  PrismaClientKnownRequestError,
-} from "@prisma/client/runtime/library"
+
+/** 避免从 @prisma/client/runtime/library 静态导入，否则 Next Webpack 会误打进无法解析 fs/child_process 的图 */
+function isPrismaInitError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    (error as { name?: string }).name === "PrismaClientInitializationError"
+  )
+}
+
+function isPrismaKnownRequest(error: unknown): error is { code: string } {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    (error as { name?: string }).name === "PrismaClientKnownRequestError"
+  )
+}
 
 declare global {
   // eslint-disable-next-line no-var
@@ -25,10 +40,10 @@ export const db = prisma
 
 /** 连接不上数据库（未启动、端口/URL 错误等） */
 export function isPrismaConnectionError(error: unknown): boolean {
-  if (error instanceof PrismaClientInitializationError) {
+  if (isPrismaInitError(error)) {
     return true
   }
-  if (error instanceof PrismaClientKnownRequestError) {
+  if (isPrismaKnownRequest(error)) {
     return error.code === "P1001" || error.code === "P1017"
   }
   return false
@@ -36,9 +51,7 @@ export function isPrismaConnectionError(error: unknown): boolean {
 
 /** 表 / 枚举等在当前库中不存在（常见于未跑过 migrate / db push） */
 export function isPrismaMissingTableError(error: unknown): boolean {
-  return (
-    error instanceof PrismaClientKnownRequestError && error.code === "P2021"
-  )
+  return isPrismaKnownRequest(error) && error.code === "P2021"
 }
 
 let devPrismaDbPushAttempted = false
