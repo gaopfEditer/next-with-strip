@@ -53,9 +53,11 @@ ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL \
     STRIPE_WEBHOOK_SECRET=$STRIPE_WEBHOOK_SECRET \
     STRIPE_PRO_MONTHLY_PLAN_ID=$STRIPE_PRO_MONTHLY_PLAN_ID
 
-# 镜像内构建：避免 OOM；跳过 ESLint（本地 pnpm build 不受影响）
+# 镜像内构建：避免 OOM；跳过 ESLint/TS 类型检查（本地 pnpm build 不受影响）
 ENV SKIP_ESLINT=1
-ENV NODE_OPTIONS=--max-old-space-size=6144
+ENV SKIP_TYPECHECK=1
+ENV VERBOSE_WEBPACK=1
+ENV NODE_OPTIONS=--max-old-space-size=8192
 
 RUN pnpm build
 

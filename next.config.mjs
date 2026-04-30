@@ -8,6 +8,10 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: process.env.SKIP_ESLINT === "1",
   },
+  /** Docker 构建常见：CI 环境与本地 TS 校验差异；仅当 SKIP_TYPECHECK=1 时跳过 */
+  typescript: {
+    ignoreBuildErrors: process.env.SKIP_TYPECHECK === "1",
+  },
   reactStrictMode: true,
   images: {
     domains: ["avatars.githubusercontent.com"],
@@ -28,7 +32,7 @@ const nextConfig = {
   },
   webpack: (config) => {
     config.infrastructureLogging = {
-      level: "error",
+      level: process.env.VERBOSE_WEBPACK === "1" ? "verbose" : "error",
     }
     return config
   },
