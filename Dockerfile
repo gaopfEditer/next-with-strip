@@ -3,7 +3,7 @@
 # 构建阶段会加载 env.mjs（next.config 引入），需提供占位环境变量；部署时用真实 .env 或 compose environment。
 # 运行：`RUN_MIGRATIONS=1` 时入口会先执行 `prisma migrate deploy`（需全局 prisma，见下方安装）。
 
-FROM node:20-bookworm-slim AS base
+FROM node:18-bookworm-slim AS base
 WORKDIR /app
 RUN apt-get update \
   && apt-get install -y --no-install-recommends openssl ca-certificates \
@@ -53,10 +53,14 @@ ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL \
     STRIPE_WEBHOOK_SECRET=$STRIPE_WEBHOOK_SECRET \
     STRIPE_PRO_MONTHLY_PLAN_ID=$STRIPE_PRO_MONTHLY_PLAN_ID
 
+# 镜像内构建：避免 OOM；跳过 ESLint（本地 pnpm build 不受影响）
+ENV SKIP_ESLINT=1
+ENV NODE_OPTIONS=--max-old-space-size=6144
+
 RUN pnpm build
 
 # ---------- 运行（standalone） ----------
-FROM node:20-bookworm-slim AS runner
+FROM node:18-bookworm-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1

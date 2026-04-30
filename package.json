@@ -2,6 +2,7 @@
   "name": "taxonomy",
   "version": "0.2.0",
   "private": true,
+  "packageManager": "pnpm@9.15.4",
   "author": {
     "name": "shadcn",
     "url": "https://twitter.com/shadcn"

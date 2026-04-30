@@ -5,6 +5,9 @@ import "./env.mjs"
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
+  eslint: {
+    ignoreDuringBuilds: process.env.SKIP_ESLINT === "1",
+  },
   reactStrictMode: true,
   images: {
     domains: ["avatars.githubusercontent.com"],
