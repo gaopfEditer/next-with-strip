@@ -24,7 +24,10 @@ interface RootLayoutProps {
   children: React.ReactNode
 }
 
+/** 避免出现经 Next 解析进 resolved metadata 的 `URL`（OG url / images 等）；Next 13.3 canary 在 dev 下 structuredClone 会 DataCloneError。 */
 export const metadata = {
+  metadataBase:
+    process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   title: {
     default: siteConfig.name,
     template: `%s | ${siteConfig.name}`,
@@ -51,7 +54,6 @@ export const metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: siteConfig.url,
     title: siteConfig.name,
     description: siteConfig.description,
     siteName: siteConfig.name,
@@ -60,7 +62,6 @@ export const metadata = {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [`${siteConfig.url}/og.jpg`],
     creator: "@shadcn",
   },
   icons: {

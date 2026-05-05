@@ -1,3 +1,5 @@
+import "server-only"
+
 import { SubscriptionPlan } from "types"
 import { env } from "@/env.mjs"
 
